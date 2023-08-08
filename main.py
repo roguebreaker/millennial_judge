@@ -43,6 +43,8 @@ async def host(ctx,
     global active_runs
     global runs_num
     if ctx.author not in active_runs.keys():
+        if runs_num > 999:
+            runs_num = 0
         runs_num += 1
         modal = MyModal(title="Input for run")
         await ctx.send_modal(modal)
@@ -59,7 +61,6 @@ async def end(ctx):
     global runs_num
     if ctx.author in active_runs.keys():
         del active_runs[ctx.author]
-        runs_num -= 1
         await ctx.respond("You have ended the run.")
     else:
         await ctx.respond("No runs exist under your user.")
