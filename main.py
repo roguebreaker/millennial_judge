@@ -18,8 +18,8 @@ class MyModal(discord.ui.Modal):
         embed = discord.Embed(title="Run Info")
         embed.add_field(name="Runs Name", value=self.children[0].value)
         embed.add_field(name="Password", value=self.children[1].value)
-        self.run_name = self.children[0].value
-        self.password = self.children[1].value
+        self.run_name = self.children[0].value.strip()
+        self.password = self.children[1].value.strip()
         await interaction.response.send_message(embeds=[embed])
         self.stop()
 
@@ -125,14 +125,15 @@ async def ng(ctx):
         await ctx.respond(f"New run at: {run_name}")
     else:
         for runner in active_runs.keys():
-            if ctx.author in active_runs[runner]['attendees']:
-                my_run = active_runs[runner]
-                run_name = my_run['runs_name']
-                matches = re.findall("[0-9]*$", run_name)
-                match = matches[0]
-                new_match = str(int(match) + 1).zfill(len(match))
-                run_name = run_name.replace(match, new_match)
-                active_runs[ctx.author]['runs_name'] = run_name
-                await ctx.respond(f"New run at: {run_name}")
+            for attendee in active_runs[runner]['attendees']:
+                if attendee == ctx.author:
+                    my_run = active_runs[runner]
+                    run_name = my_run['runs_name']
+                    matches = re.findall("[0-9]*$", run_name)
+                    match = matches[0]
+                    new_match = str(int(match) + 1).zfill(len(match))
+                    run_name = run_name.replace(match, new_match)
+                    active_runs[runner]['runs_name'] = run_name
+                    await ctx.respond(f"New run at: {run_name}")
 
 bot.run(TOKEN)
