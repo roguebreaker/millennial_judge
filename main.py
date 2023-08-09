@@ -1,6 +1,7 @@
 import discord
 import os
 import re
+import random
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord.commands import Option
@@ -136,5 +137,16 @@ async def ng(ctx):
                     run_name = run_name.replace(match, new_match)
                     active_runs[runner]['runs_name'] = run_name
                     await ctx.respond(f"New run at: {run_name}")
+
+@bot.slash_command(name="cowbell", description="Needs more cowbell")
+async def cowbell(ctx):    
+    cowbell_gifs = [
+        "https://tenor.com/u7Mb.gif",
+        "https://tenor.com/biO0G.gif",
+        "https://tenor.com/bee7U.gif",
+        "https://tenor.com/bFq8M.gif",
+    ]
+    chosen_gif = random.choice(cowbell_gifs)
+    await ctx.send(chosen_gif)
 
 bot.run(TOKEN)
