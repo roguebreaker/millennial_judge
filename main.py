@@ -145,11 +145,11 @@ async def runs1(ctx):
             type = active_runs[run]['type']
             name = active_runs[run]['runs_name']
             password = active_runs[run]['runs_password']
-            message = f"Game Name: {str(name)}\nGame Password: {password}\nRunner: {runner.mention}, Ladder: {ladder}, Type: {type}\n"
+            message = f"Game Name: {str(name)}\nGame Password: {password}\nRunner: {str(runner)}, Ladder: {ladder}, Type: {type}\n"
             attendees = active_runs[run]['attendees']
             message += "Attendees:\n"
             for attendee in attendees:
-                message += f"{attendee.mention}\n"
+                message += f"{str(attendee)}\n"
             message += "\n\n"
             if has_available_spots:
                 join_button = discord.ui.Button(style=discord.ButtonStyle.green, label="Join Run")
