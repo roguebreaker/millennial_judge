@@ -179,8 +179,11 @@ async def ng1(ctx):
         run_name = my_run['runs_name']
         matches = re.findall("[0-9]*$", run_name)
         match = matches[0]
-        new_match = str(int(match) + 1).zfill(len(match))
-        run_name = run_name.replace(match, new_match)
+        if match == "":
+            run_name = run_name + "-1"
+        else:
+            new_match = str(int(match) + 1).zfill(len(match))
+            run_name = run_name.replace(match, new_match)
         active_runs[ctx.author]['runs_name'] = run_name
         await ctx.respond(f"New run at: {run_name}", ephemeral=True)
     else:
@@ -191,8 +194,11 @@ async def ng1(ctx):
                     run_name = my_run['runs_name']
                     matches = re.findall("[0-9]*$", run_name)
                     match = matches[0]
-                    new_match = str(int(match) + 1).zfill(len(match))
-                    run_name = run_name.replace(match, new_match)
+                    if match == "":
+                        run_name = run_name + "-1"
+                    else:
+                        new_match = str(int(match) + 1).zfill(len(match))
+                        run_name = run_name.replace(match, new_match)
                     active_runs[runner]['runs_name'] = run_name
                     await ctx.respond(f"New run at: {run_name}", ephemeral=True)
 
