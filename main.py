@@ -125,14 +125,14 @@ async def end(ctx):
     global runs_num
     if ctx.author in active_runs.keys():
         del active_runs[ctx.author]
-        await ctx.respond("You have ended the run.")
+        await ctx.respond(f"{ctx.author.mention} has ended the run.")
     else:
         await ctx.respond("No runs exist under your user.", ephemeral=True)
     if ctx.author in run_timeouts:
         run_timeouts[ctx.author].cancel()
         del run_timeouts[ctx.author]
 
-async def join_run_callback(interaction: discord.Interaction, run_id: int):
+async def join_run_callback(interaction: discord.Interaction, run_id):
     run_info = active_runs.get(run_id)
     if run_info:
         has_available_spots = len(run_info['attendees']) < 7
@@ -150,7 +150,7 @@ async def join_run_callback(interaction: discord.Interaction, run_id: int):
         if existing_run:
             existing_run['attendees'].remove(user)
             available_spots = 7 - len(run_info['attendees'])
-            await interaction.response.send_message(content=f"{user} has left the run. There are {available_spots} spots left.")
+            await interaction.response.send_message(content=f"{user.mention} has left the run. There are {available_spots} spots left.")
         if user == run_info['runner']:
             await interaction.response.send_message(content="You can't join your own run.", ephemeral=True)
         elif len(run_info['attendees']) < 7:
@@ -229,8 +229,16 @@ async def ng(ctx):
     global active_runs
     if ctx.author in run_timeouts:
         run_timeouts[ctx.author].cancel()
-    timeout_task = asyncio.create_task(remove_run_after_timeout(ctx.author))
-    run_timeouts[ctx.author] = timeout_task
+        timeout_task = asyncio.create_task(remove_run_after_timeout(ctx.author))
+        run_timeouts[ctx.author] = timeout_task
+    else:
+        for runner in active_runs.keys():
+            for attendee in active_runs[runner]['attendees']:
+                if attendee == ctx.author:
+                    my_run = active_runs[runner]
+                    run_timeouts[runner].cancel()
+                    timeout_task = asyncio.create_task(remove_run_after_timeout(runner))
+                    run_timeouts[runner] = timeout_task
     if ctx.author in active_runs.keys():
         my_run = active_runs[ctx.author]
         run_name = my_run['runs_name']
