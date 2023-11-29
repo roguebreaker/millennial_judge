@@ -36,7 +36,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.all()
 bot = commands.Bot(intents=intents)
-guild_ids = [901607478523998218]
+guild_ids = [333045209279758336]
 
 async def remove_run_after_timeout(run_owner):
     global active_runs
